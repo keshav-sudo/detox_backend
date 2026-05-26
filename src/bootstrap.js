@@ -30,21 +30,9 @@ app.use(cors({
 }));
 app.use(express.json({ limit: "2mb" }));
 
-function ensureDemoUser() {
-  return db.collection("users").findOne({ email: "demo@detoxos.app" }).then(async (existing) => {
-    if (existing) return;
-    await db.collection("users").insertOne({
-      id: newId(),
-      email: "demo@detoxos.app",
-      name: "Rahul Demo",
-      passwordHash: hashPassword("demo1234"),
-      plan: "pro",
-      problemActivities: ["instagram_reels", "pubg_freefire"],
-      badges: [],
-      createdAt: nowIso(),
-    });
-  });
-}
+app.get("/health", (_req, res) => {
+  res.json({ status: "healthy", timestamp: nowIso() });
+});
 
 registerAuthRoutes(app, db);
 registerCatalogRoutes(app, db);
@@ -53,7 +41,7 @@ registerPodRoutes(app, db, io);
 registerIndexRoutes(app, db);
 
 await seedCatalog(db);
-await ensureDemoUser();
+
 
 server.listen(PORT, () => {
   console.log(`DetoxOS Node backend listening on http://localhost:${PORT}`);
