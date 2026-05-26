@@ -762,6 +762,10 @@ app.patch("/api/notifications/:nid/read", authMiddleware, async (req, res) => {
   res.json({ ok: true });
 });
 
+app.get("/health", (_req, res) => {
+  res.json({ status: "healthy", timestamp: nowIso() });
+});
+
 app.get("/", async (_req, res) => {
   const cnt = await db.collection("activity_catalog").countDocuments({});
   res.json({ ok: true, activityCatalogCount: cnt, ts: nowIso() });
