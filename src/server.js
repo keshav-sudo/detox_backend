@@ -80,21 +80,6 @@ function authMiddleware(req, res, next) {
   }
 }
 
-async function ensureDemoUser() {
-  const users = db.collection("users");
-  const existing = await users.findOne({ email: "demo@detoxos.app" });
-  if (existing) return;
-  await users.insertOne({
-    id: newId(),
-    email: "demo@detoxos.app",
-    name: "Rahul Demo",
-    passwordHash: hashPassword("demo1234"),
-    plan: "pro",
-    problemActivities: ["instagram_reels", "pubg_freefire"],
-    badges: [],
-    createdAt: nowIso(),
-  });
-}
 
 async function updateStreak(userId, activityId, today, isHealthy) {
   const streaks = db.collection("streaks");
@@ -772,7 +757,7 @@ app.get("/", async (_req, res) => {
 });
 
 await seedCatalog(db);
-await ensureDemoUser();
+
 
 server.listen(PORT, () => {
   console.log(`DetoxOS Node backend listening on http://localhost:${PORT}`);
